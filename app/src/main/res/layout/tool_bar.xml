@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/actionbarT"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/toolBarColor"
+    android:minHeight="?attr/actionBarSize"
+    app:theme="@style/Base.Theme.AppCompat.CompactMenu"
+
+    android:elevation="10dp">
+
+    <LinearLayout
+        android:id="@+id/toolbarmenucontainer"
+        android:layout_width="match_parent"
+        android:weightSum="3"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/toolBarColor"
+            android:clickable="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_search_black_24dp" />
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/toolBarColor"
+            android:clickable="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_bookmark_black_24dp" />
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/toolBarColor"
+            android:clickable="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_menu_black_24dp" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.Toolbar>
