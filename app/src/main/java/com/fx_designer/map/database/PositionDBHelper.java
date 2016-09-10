@@ -21,11 +21,12 @@ public class PositionDBHelper extends SQLiteOpenHelper {
                     PositionContract.Position.COLUMN_NAME_POSITION_NAME + " TEXT NOT NULL" + COMMA_SEP +
                     PositionContract.Position.COLUMN_NAME_LATITUDE + " REAL NOT NULL" + COMMA_SEP +
                     PositionContract.Position.COLUMN_NAME_LONGITUDE + " REAL NOT NULL" + COMMA_SEP +
-                    PositionContract.Position.COLUMN_NAME_ADDRESS + " TEXT NOT" + COMMA_SEP +
-                    PositionContract.Position.COLUMN_NAME_PHONE_NUMBER + " TEXT NOT" + " )";
+                    PositionContract.Position.COLUMN_NAME_ADDRESS + " TEXT" + COMMA_SEP +
+                    PositionContract.Position.COLUMN_NAME_PHONE_NUMBER + " TEXT" + " )";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + PositionContract.Position.TABLE_NAME;
+
 
 
 

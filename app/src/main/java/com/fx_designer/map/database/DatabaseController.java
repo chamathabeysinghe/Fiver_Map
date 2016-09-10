@@ -4,10 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.fx_designer.map.models.Position;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Chamath Abeysinghe on 9/9/2016.
@@ -16,10 +18,19 @@ public class DatabaseController {
 
     private Context context;
     private PositionDBHelper dbHelper;
-    public DatabaseController(Context context) {
+    private static DatabaseController databaseController;
+    private DatabaseController(Context context) {
         this.context = context;
         dbHelper=new PositionDBHelper(context);
     }
+
+    public static DatabaseController getInstance(Context c){
+        if(databaseController==null){
+            databaseController=new DatabaseController(c);
+        }
+        return databaseController;
+    }
+
 
     public void insertPosition(double lat,double longitude,String name,String address,String telephone){
         SQLiteDatabase db=dbHelper.getWritableDatabase();
@@ -29,14 +40,15 @@ public class DatabaseController {
         values.put(PositionContract.Position.COLUMN_NAME_LONGITUDE,longitude);
         values.put(PositionContract.Position.COLUMN_NAME_ADDRESS,address);
         values.put(PositionContract.Position.COLUMN_NAME_PHONE_NUMBER,telephone);
-        db.insert(PositionContract.Position.TABLE_NAME,null,values);
+        long rowId=db.insert(PositionContract.Position.TABLE_NAME,null,values);
+        Log.e("ID",""+rowId);
     }
 
     public ArrayList<Position> readFromDatabase(String name){
         SQLiteDatabase db=dbHelper.getReadableDatabase();
         String projection[]={PositionContract.Position.COLUMN_NAME_POSITION_NAME, PositionContract.Position.COLUMN_NAME_LONGITUDE, PositionContract.Position.COLUMN_NAME_LATITUDE
         , PositionContract.Position.COLUMN_NAME_ADDRESS, PositionContract.Position.COLUMN_NAME_PHONE_NUMBER};
-        String selection= PositionContract.Position.COLUMN_NAME_POSITION_NAME+" = ";
+        String selection= PositionContract.Position.COLUMN_NAME_POSITION_NAME+" = ? ";
         String selectionArgs[]={name};
         Cursor cursor=db.query(
                 PositionContract.Position.TABLE_NAME,
@@ -49,16 +61,15 @@ public class DatabaseController {
         );
         ArrayList<Position> positions=new ArrayList<>();
         while(cursor.moveToNext()){
+            Log.e("Reading","Read a one");
             String readName= cursor.getString(cursor.getColumnIndex(PositionContract.Position.COLUMN_NAME_POSITION_NAME));
             String address= cursor.getString(cursor.getColumnIndex(PositionContract.Position.COLUMN_NAME_ADDRESS));
             String number= cursor.getString(cursor.getColumnIndex(PositionContract.Position.COLUMN_NAME_PHONE_NUMBER));
             double longitude=cursor.getDouble(cursor.getColumnIndex(PositionContract.Position.COLUMN_NAME_LONGITUDE));
             double lat=cursor.getDouble(cursor.getColumnIndex(PositionContract.Position.COLUMN_NAME_LATITUDE));
-
             Position position=new Position(lat,longitude,readName,address,number);
             positions.add(position);
         }
-
         return positions;
     }
 

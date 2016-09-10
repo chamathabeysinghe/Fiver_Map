@@ -39,35 +39,10 @@
 
     </RelativeLayout>
 
+    <include
+        layout="@layout/add_location_panel"
+        />
 
 
-
-    <RelativeLayout
-        android:id="@+id/hidden_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/main_view"
-        android:background="#ffffff"
-        >
-
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText"
-            android:layout_toLeftOf="@+id/addPositionButton"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/addPositionButton"
-        android:text="Add Position"
-            android:layout_alignBottom="@+id/editText"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-    </RelativeLayout>
 
 </FrameLayout>
