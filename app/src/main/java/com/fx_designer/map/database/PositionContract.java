@@ -23,10 +23,12 @@ public class PositionContract {
     public static class Position implements BaseColumns {
         public static final String TABLE_NAME = "positions";
         public static final String COLUMN_NAME_POSITION_NAME = "name";
+        public static final String COLUMN_NAME_POSITION_CATEGORY = "category";
         public static final String COLUMN_NAME_LONGITUDE = "long";
         public static final String COLUMN_NAME_LATITUDE = "lat";
         public static final String COLUMN_NAME_ADDRESS = "address";
         public static final String COLUMN_NAME_PHONE_NUMBER = "phone";
+
 
     }
 

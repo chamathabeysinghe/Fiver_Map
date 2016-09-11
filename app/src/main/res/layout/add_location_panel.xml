@@ -7,20 +7,36 @@
     android:layout_below="@id/main_view"
     android:background="#ffffff"
     android:padding="4px"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:elevation="4dp"
+    >
+    <EditText
+        android:layout_margin="2px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText5"
+        android:hint="Category"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 
     <EditText
+        android:layout_margin="2px"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
         android:hint="Name"
+        android:layout_below="@+id/editText5"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
     <EditText
+        android:layout_margin="2px"
+
         android:hint="Address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,6 +48,8 @@
         android:layout_alignParentEnd="true" />
 
     <EditText
+        android:layout_margin="2px"
+
         android:hint="Telephone Number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,16 +59,44 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+    <EditText
+        android:layout_margin="2px"
 
-    <Button
+        android:hint="Longitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/addPositionButton"
+        android:id="@+id/editText6"
         android:layout_below="@+id/editText3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_margin="2px"
+
+        android:hint="Latitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText7"
+        android:layout_below="@+id/editText6"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_margin="2px"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Location"
+        android:id="@+id/addPositionButton"
+        android:layout_below="@+id/editText7"
         android:layout_centerHorizontal="true"
         android:textColor="#ffffff"
         android:padding="5px"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:background="@color/colorPrimary"/>
 
 </RelativeLayout>

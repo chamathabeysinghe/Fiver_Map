@@ -10,15 +10,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class PositionDBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION=1;
+    public static final int DATABASE_VERSION=2;
     public static final String DATABASE_NAME="Rates.db";
 
 
     private static final String COMMA_SEP = ",";
+
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + PositionContract.Position.TABLE_NAME + " (" +
                     PositionContract.Position._ID + " INTEGER PRIMARY KEY," +
                     PositionContract.Position.COLUMN_NAME_POSITION_NAME + " TEXT NOT NULL" + COMMA_SEP +
+                    PositionContract.Position.COLUMN_NAME_POSITION_CATEGORY + " TEXT NOT NULL" + COMMA_SEP +
                     PositionContract.Position.COLUMN_NAME_LATITUDE + " REAL NOT NULL" + COMMA_SEP +
                     PositionContract.Position.COLUMN_NAME_LONGITUDE + " REAL NOT NULL" + COMMA_SEP +
                     PositionContract.Position.COLUMN_NAME_ADDRESS + " TEXT" + COMMA_SEP +

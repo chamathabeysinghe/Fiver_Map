@@ -9,6 +9,7 @@ public class Position {
     private String address;
     private String telephoneNumber;
     private String name;
+    private String category;
 
     public String getName() {
         return name;
@@ -18,11 +19,13 @@ public class Position {
         this.name = name;
     }
 
-    public Position(double lat, double longitude, String name,String address, String telephoneNumber) {
+    public Position(double lat, double longitude, String name,String address, String telephoneNumber,String category) {
         this.lat = lat;
         this.longitude = longitude;
         this.address = address;
         this.telephoneNumber = telephoneNumber;
+        this.name=name;
+        this.category=category;
     }
 
     public double getLat() {
@@ -55,5 +58,13 @@ public class Position {
 
     public void setTelephoneNumber(String telephoneNumber) {
         this.telephoneNumber = telephoneNumber;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
