@@ -3,6 +3,7 @@ package com.fx_designer.map;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -32,10 +33,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,SearchFragment.OnFragmentInteractionListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,SearchFragment.OnFragmentInteractionListener,OnPositionAdd {
 
     //google map object
     private GoogleMap mMap;
@@ -278,9 +287,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String category=categoryTextField.getText().toString();
             double lat=Double.parseDouble(latTextField.getText().toString());
             double longitude=Double.parseDouble(longTextFiText.getText().toString());
-            databaseController.insertPosition(lat,longitude,name,category,address,phone);
-
-            Toast.makeText(this,"Add location to db ",Toast.LENGTH_SHORT).show();
+            AddDB d=new AddDB(name,category,lat,longitude,address,phone,this);
+            d.execute();
+            //databaseController.insertPosition(lat,longitude,name,category,address,phone);
         }
         catch (NumberFormatException e){
             Toast.makeText(this,"Invalid input ",Toast.LENGTH_SHORT).show();
@@ -304,4 +313,71 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         longTextFiText.setTag("");
         categoryTextField.setText("");
     }
+
+    @Override
+    public void addedToDB() {
+        Toast.makeText(this,"Add to remote Database",Toast.LENGTH_SHORT).show();
+    }
+}
+
+class AddDB extends AsyncTask<Void,Void,String> {
+    String urlStr="http://45.55.205.150/RestServer/addlocation.php?";
+    OnPositionAdd a;
+    AddDB(String name,String category,double lat,double lon,String address,String phone,OnPositionAdd a){
+        urlStr+=("name="+name+"&category="+category+"&lat="+lat+"&long="+lon+"&address="+address+"&phone="+phone);
+        this.a=a;
+    }
+
+    @Override
+    protected String doInBackground(Void... voids) {
+
+
+        Log.e("Download","I am downloading data now");
+
+        URL url;
+        String output="";
+        HttpURLConnection urlConnection = null;
+
+        try {
+            url = new URL(urlStr);
+
+            urlConnection = (HttpURLConnection) url
+                    .openConnection();
+
+            InputStream in = urlConnection.getInputStream();
+
+            InputStreamReader isw = new InputStreamReader(in);
+
+            int data = isw.read();
+            while (data != -1) {
+                char current = (char) data;
+                data = isw.read();
+                output+=current;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+
+        return output;
+    }
+
+
+    @Override
+    protected void onPostExecute(String s) {
+
+        if(s!=null){
+            a.addedToDB();
+        }
+
+        super.onPostExecute(s);
+    }
+}
+
+interface OnPositionAdd{
+    public void addedToDB();
 }

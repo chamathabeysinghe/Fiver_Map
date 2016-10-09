@@ -2,6 +2,7 @@ package com.fx_designer.map;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -26,8 +27,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 
 /**
@@ -37,7 +47,7 @@ import java.util.Arrays;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class SearchFragment extends Fragment implements AdapterView.OnItemSelectedListener,OnPositionsFound {
 
 
     private OnFragmentInteractionListener mListener;
@@ -97,7 +107,9 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
     private void onSearch(){
 
             String keyword=serchTextField.getText().toString();
-            search(keyword);
+            FetchData f=new FetchData(keyword,this);
+            f.execute();
+            //search(keyword);
 
     }
 
@@ -150,12 +162,33 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String keyword=spinner.getSelectedItem().toString().toLowerCase();
         if(keyword.equalsIgnoreCase("Select Category"))return;
-        search(keyword);
+        FetchData f=new FetchData(keyword,this);
+        f.execute();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    @Override
+    public void addPositions(ArrayList<Position> positionsArrayList) {
+        positionsList= positionsArrayList;
+
+        if(positionsList.size()!=0){
+            showAllOnMap.setVisibility(View.VISIBLE);
+            View view = this.getActivity().getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
+        else{
+            showAllOnMap.setVisibility(View.INVISIBLE);
+            Toast.makeText(this.getContext(),"Nothing Found",Toast.LENGTH_LONG).show();
+        }
+        ItemsAdapter itemsAdapter=new ItemsAdapter(getActivity(),positionsList);
+        listView.setAdapter(itemsAdapter);
     }
 
     /**
@@ -174,4 +207,87 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
 
+}
+
+
+class FetchData extends AsyncTask<Void,Void,String>{
+    String key="";
+    OnPositionsFound f;
+    FetchData(String key,OnPositionsFound f){
+        this.key=key;
+        this.f=f;
+    }
+    @Override
+    protected String doInBackground(Void... voids) {
+
+
+        Log.e("Download","I am downloading data now");
+        String urlStr="http://45.55.205.150/RestServer/readlocation.php?key="+key;
+        URL url;
+        String output="";
+        HttpURLConnection urlConnection = null;
+
+        try {
+            url = new URL(urlStr);
+
+            urlConnection = (HttpURLConnection) url
+                    .openConnection();
+
+            InputStream in = urlConnection.getInputStream();
+
+            InputStreamReader isw = new InputStreamReader(in);
+
+            int data = isw.read();
+            while (data != -1) {
+                char current = (char) data;
+                data = isw.read();
+                output+=current;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+
+        return output;
+    }
+
+
+    @Override
+    protected void onPostExecute(String s) {
+
+        if(s!=null){
+            try {
+                ArrayList<Position> arrayList=new ArrayList<>();
+                JSONArray ar=new JSONArray(s);
+                for(int i=0;i<ar.length();i++){
+                    JSONObject j=ar.getJSONObject(i);
+                    Log.e("Data",j.getString("name"));
+
+                    String name=j.getString("name");
+                    String category=j.getString("category");
+                    String phone=j.getString("phone");
+                    String address=j.getString("address");
+                    double longitude=j.getDouble("long");
+                    double lat=j.getDouble("lat");
+                    Position p=new Position(lat,longitude,name,address,phone,category);
+                    arrayList.add(p);
+                }
+                f.addPositions(arrayList);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        super.onPostExecute(s);
+    }
+}
+
+interface OnPositionsFound{
+    public void addPositions(ArrayList<Position> positionsList);
 }
